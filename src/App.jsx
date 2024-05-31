@@ -3,6 +3,8 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
+//Note - use import.meta.env.VITE_REACT_APP_BACKEND_URL for the endpoint - this is saved in GitHub secrets
+
 function App() {
   const [count, setCount] = useState(0)
 
