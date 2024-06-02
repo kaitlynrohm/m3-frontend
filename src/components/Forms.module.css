@@ -1,22 +1,24 @@
 .contentContainer{
-    width: 30%;
-
+    width: 55%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: start;
     align-items: center;
 }
-.contentContainer *{
-    margin-bottom: 10px;
+.contentContainer form{
+  height: fit-content;
 }
+
 .title{
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 .inputContainer{
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
     height: 30px;
+    margin: 10px 0;
 }
 .inputContainer input{
     width: 77%;
@@ -34,9 +36,14 @@
 .chat{
     padding: 10px;
     border: 2px solid black;
+    height: 100%;
 }
 
 .inputContainer button{
     justify-content: center;
     border: 2px solid black;
+}
+.contentContainer form{
+  width: 100%;
+  height: 60%;
 }
