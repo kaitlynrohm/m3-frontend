@@ -1,4 +1,4 @@
-import styles from "./Forms.module.css"
+import styles from "./Forms.module.css";
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -14,11 +14,18 @@ function InterviewChat() {
     setConversation(newConversation);
     setUserResponse('');
 
-    const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/gemini-connection`, {
-      jobTitle,
-      userResponse,
-      conversation: newConversation,
-    });
+    const conversationHistory = newConversation.map(entry => ({
+      role: entry.from === 'user' ? 'user' : 'model',
+      parts: [{ text: entry.text }]
+    }));
+
+    const requestData = {
+      history: conversationHistory,
+      message: userResponse,
+      title: jobTitle
+    };
+
+    const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/gemini-connection`, requestData);
 
     setConversation([...newConversation, { from: 'interviewer', text: response.data.text }]);
   };
