@@ -25,9 +25,29 @@ function InterviewChat() {
       title: jobTitle
     };
 
-    const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/gemini-connection`, requestData);
-
-    setConversation([...newConversation, { from: 'interviewer', text: response.data.text }]);
+    try {
+      await axios
+      .post(
+        `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/gemini-connection`,
+        requestData
+      )
+      .then((response) => {
+        console.log('Response Data:', response.data);
+        setConversation([
+          ...newConversation,
+          { from: "interviewer", text: response.data },
+        ]);
+      });
+    } catch (error) {
+      console.error('Error making the request:', error);
+      if (error.response) {
+        console.error('Error Response Data:', error.response.data); // Log the server response data
+        console.error('Error Status:', error.response.status); // Log the status code
+        console.error('Error Headers:', error.response.headers); // Log the response headers
+      } else {
+        console.error('Error Request:', error.request); // Log the request that triggered the error
+      }
+    }
   };
 
   return (
