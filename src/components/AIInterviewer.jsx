@@ -16,26 +16,23 @@ function InterviewChat() {
 
     console.log('Submitting job title:', requestData);
 
-    try {
-      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/gemini-connection`, requestData);
-      console.log('Job title submitted successfully:', response.data);
-
-      // Update the conversation with the model's response
+    
+    await axios
+    .post(
+      `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/gemini-connection`,
+      requestData
+    )
+    .then((response) => {
+      console.log(
+        'Job title submitted successfully:',
+        response.data
+      );
       setConversation([
         ...conversation,
         { from: "user", text: "Begin" },
         { from: "interviewer", text: response.data },
       ]);
-    } catch (error) {
-      console.error('Error submitting job title:', error);
-      if (error.response) {
-        console.error('Error Response Data:', error.response.data);
-        console.error('Error Status:', error.response.status);
-        console.error('Error Headers:', error.response.headers);
-      } else {
-        console.error('Error Request:', error.request);
-      }
-    }
+    });
   };
 
   const handleReplySubmit = async (e) => {
