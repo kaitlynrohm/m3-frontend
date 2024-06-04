@@ -2,12 +2,43 @@ import styles from "./Forms.module.css";
 import React, { useState } from "react";
 import axios from "axios";
 
+
+
 function InterviewChat() {
   const [jobTitle, setJobTitle] = useState("");
   const [conversation, setConversation] = useState([]);
   const [userResponse, setUserResponse] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleJobTitleSubmit = async (e) => {
+    e.preventDefault();
+
+    const requestData = { title: jobTitle};
+
+    console.log('Submitting job title:', requestData);
+
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/gemini-connection`, requestData);
+      console.log('Job title submitted successfully:', response.data);
+
+      // Update the conversation with the model's response
+      setConversation([
+        ...conversation,
+        { from: "user", text: "Begin" },
+        { from: "interviewer", text: response.data },
+      ]);
+    } catch (error) {
+      console.error('Error submitting job title:', error);
+      if (error.response) {
+        console.error('Error Response Data:', error.response.data);
+        console.error('Error Status:', error.response.status);
+        console.error('Error Headers:', error.response.headers);
+      } else {
+        console.error('Error Request:', error.request);
+      }
+    }
+  };
+
+  const handleReplySubmit = async (e) => {
     e.preventDefault();
 
     const newConversation = [
@@ -28,54 +59,77 @@ function InterviewChat() {
       title: jobTitle,
     };
 
-    await axios
-      .post(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/gemini-connection`,
-        requestData
-      )
-      .then((response) => {
-        console.log(response.data);
+    const userResponsesCount = newConversation.filter(entry => entry.from === 'user').length;
+    const endpoint = userResponsesCount === 8
+      ? `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/feedback`
+      : `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/gemini-connection`;
+
+    console.log('Constructed URL:', endpoint);
+    console.log('Request Data:', requestData);
+
+    try {
+      const response = await axios.post(endpoint, requestData);
+      console.log('Response Data:', response.data);
+
+      if (userResponsesCount === 8) {
+        alert('Feedback submitted successfully.');
+      } else {
         setConversation([
           ...newConversation,
           { from: "interviewer", text: response.data },
         ]);
-      });
+      }
+    } catch (error) {
+      console.error('Error making the request:', error);
+      if (error.response) {
+        console.error('Error Response Data:', error.response.data);
+        console.error('Error Status:', error.response.status);
+        console.error('Error Headers:', error.response.headers);
+      } else {
+        console.error('Error Request:', error.request);
+      }
+    }
   };
 
   return (
     <div className={styles.contentContainer}>
       <h2 className={styles.title}>AI Mock Interviewer</h2>
-      <form onSubmit={handleSubmit}>
+
+      <form className={styles.jobTitleForm} onSubmit={handleJobTitleSubmit}>
         <div className={styles.inputContainer}>
           <label>Job Title:</label>
           <input
-            placeholder="Junior Developer"
+            placeholder="Submit Job Title to begin..eg,Junior Developer"
             type="text"
             value={jobTitle}
             onChange={(e) => setJobTitle(e.target.value)}
             required
           />
+          <button type="submit">Submit</button>
         </div>
+      </form>
 
+      <form className={styles.messageForm} onSubmit={handleReplySubmit}>
         <div className={styles.chat}>
           {conversation.map((entry, index) => (
             <p
               key={index}
-              style={{ textAlign: entry.from === "user" ? "right" : "left" }}
+              className={entry.from === "user" ? styles.userMessage : styles.modelMessage}
             >
               {entry.text}
             </p>
           ))}
         </div>
 
-        <div className={styles.inputContainer}>
-          <input
+        <div className={styles.inputContainer} id={styles.message}>
+          <textarea 
             placeholder="I'm passionate because I.."
-            type="text"
+            type='text'
             value={userResponse}
             onChange={(e) => setUserResponse(e.target.value)}
+            style={{ overflow: 'hidden' }}
           />
-          <button type="submit">Submit</button>
+          <button type="submit">Reply</button>
         </div>
       </form>
     </div>
