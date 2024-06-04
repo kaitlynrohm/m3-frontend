@@ -63,6 +63,7 @@ function InterviewChat() {
               onChange={(e) => setJobTitle(e.target.value)}
               required
             />
+            <button type="submit">Submit</button>
         </div>
 
         <div className={styles.chat}>
@@ -79,9 +80,9 @@ function InterviewChat() {
             type="text"
             value={userResponse}
             onChange={(e) => setUserResponse(e.target.value)}
-            required
+            
           />
-          <button type="submit">Submit</button>
+          <button type="submit">Reply</button>
         </div>
       </form>
     </div>
