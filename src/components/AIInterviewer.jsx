@@ -67,39 +67,26 @@ function InterviewChat() {
     console.log('Constructed URL:', endpoint);
     console.log('Request Data:', requestData);
 
-    try {
-      const response = await axios.post(endpoint, requestData);
-      console.log('Response Data:', response.data);
-
-      if (userResponsesCount === 8) {
-        alert('Feedback submitted successfully.');
-      } else {
+    await axios
+      .post(endpoint, requestData)
+      .then((response) => {
+        console.log(response.data);
         setConversation([
           ...newConversation,
           { from: "interviewer", text: response.data },
         ]);
-      }
-    } catch (error) {
-      console.error('Error making the request:', error);
-      if (error.response) {
-        console.error('Error Response Data:', error.response.data);
-        console.error('Error Status:', error.response.status);
-        console.error('Error Headers:', error.response.headers);
-      } else {
-        console.error('Error Request:', error.request);
-      }
-    }
+      });
   };
 
   return (
     <div className={styles.contentContainer}>
-      <h2 className={styles.title}>AI Mock Interviewer</h2>
+      <h2 className={styles.title}>AI Interviewer</h2>
 
       <form className={styles.jobTitleForm} onSubmit={handleJobTitleSubmit}>
         <div className={styles.inputContainer}>
           <label>Job Title:</label>
           <input
-            placeholder="Submit Job Title to begin..eg,Junior Developer"
+            placeholder="Submit Job Title to begin..eg, Junior Developer"
             type="text"
             value={jobTitle}
             onChange={(e) => setJobTitle(e.target.value)}
@@ -128,6 +115,7 @@ function InterviewChat() {
             value={userResponse}
             onChange={(e) => setUserResponse(e.target.value)}
             style={{ overflow: 'hidden' }}
+            required
           />
           <button type="submit">Reply</button>
         </div>
