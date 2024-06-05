@@ -1,34 +1,48 @@
 import styles from "./Forms.module.css";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSync } from "@fortawesome/free-solid-svg-icons";
 
-function InterviewChat() {
+function AIInterview() {
   const [jobTitle, setJobTitle] = useState("");
   const [conversation, setConversation] = useState([]);
   const [userResponse, setUserResponse] = useState("");
+  const [submitToFeedback, setSubmitToFeedback] = useState(false);
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false); // Add loading state
+  const chatRef = useRef(null); // Add reference to chat container
 
   const handleJobTitleSubmit = async (e) => {
     e.preventDefault();
 
-    const requestData = { title: jobTitle};
+    const requestData = { title: jobTitle };
 
+    setLoading(true); // Set loading to true before the API call
     await axios
-    .post(
-      `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/gemini-connection`,
-      requestData
-    )
-    .then((response) => {
-      console.log('Job title submitted successfully:', response.data);
-      setConversation([
-        ...conversation,
-        { from: "user", text: "Begin" },
-        { from: "interviewer", text: response.data },
-      ]);
-    });
+      .post(
+        `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/gemini-connection`,
+        requestData
+      )
+      .then((response) => {
+        console.log("Job title submitted successfully:", response.data);
+        setConversation([
+          ...conversation,
+          { from: "user", text: `Begin mock interview for ${jobTitle}.` },
+          { from: "interviewer", text: response.data },
+        ]);
+        setLoading(false); // Set loading to false after the API call
+      })
+      .catch(() => setLoading(false)); // Set loading to false in case of error
   };
 
   const handleReplySubmit = async (e) => {
     e.preventDefault();
+
+    if (feedbackSubmitted) {
+      window.location.reload();
+      return;
+    }
 
     const newConversation = [
       ...conversation,
@@ -48,14 +62,14 @@ function InterviewChat() {
       title: jobTitle,
     };
 
-    const userResponsesCount = newConversation.filter(entry => entry.from === 'user').length;
-    const endpoint = userResponsesCount === 8
+    const endpoint = submitToFeedback
       ? `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/feedback`
       : `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/gemini-connection`;
 
-    console.log('Constructed URL:', endpoint);
-    console.log('Request Data:', requestData);
+    console.log("Constructed URL:", endpoint);
+    console.log("Request Data:", requestData);
 
+    setLoading(true); // Set loading to true before the API call
     await axios
       .post(endpoint, requestData)
       .then((response) => {
@@ -64,12 +78,21 @@ function InterviewChat() {
           ...newConversation,
           { from: "interviewer", text: response.data },
         ]);
-      });
+        setLoading(false); // Set loading to false after the API call
+      })
+      .catch(() => setLoading(false)); // Set loading to false in case of error
   };
+
+  // Scroll to the bottom of the chat container whenever the conversation updates
+  useEffect(() => {
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
+  }, [conversation]);
 
   return (
     <div className={styles.contentContainer}>
-      <h2 className={styles.title}>AI Interviewer</h2>
+      <h2 className={styles.title}>AI Mock Interview</h2>
 
       <form className={styles.jobTitleForm} onSubmit={handleJobTitleSubmit}>
         <div className={styles.inputContainer}>
@@ -86,31 +109,54 @@ function InterviewChat() {
       </form>
 
       <form className={styles.messageForm} onSubmit={handleReplySubmit}>
-        <div className={styles.chat}>
+        <div className={styles.chat} ref={chatRef}> {/* Add ref to chat container */}
           {conversation.map((entry, index) => (
             <p
               key={index}
               className={entry.from === "user" ? styles.userMessage : styles.modelMessage}
             >
-              {entry.text}
+              {entry.from === "user" ? entry.text : <><strong>AI:</strong> {entry.text}</>}
             </p>
           ))}
+          {loading && (
+            <p className={styles.modelMessage}>
+              <strong>AI:</strong> AI is typing
+              <span className={styles.loadingDots}>
+                <span>.</span>
+                <span className={styles.dot1}>.</span>
+                <span className={styles.dot2}>.</span>
+              </span>
+            </p>
+          )}
         </div>
 
         <div className={styles.inputContainer} id={styles.message}>
-          <textarea 
-            placeholder="I'm passionate because I.."
-            type='text'
+          <textarea
+            placeholder="Type your response here..."
+            type="text"
             value={userResponse}
             onChange={(e) => setUserResponse(e.target.value)}
-            style={{ overflow: 'hidden' }}
-            required
+            style={{ overflow: "hidden" }}
+            required={!submitToFeedback}
           />
-          <button type="submit">Reply</button>
+          <button type="submit" className={styles.replyButton}>Reply</button>
+          <button
+            type="submit"
+            className={styles.feedbackButton}
+            onClick={() => {
+              if (submitToFeedback) {
+                window.location.reload();
+              } else {
+                setSubmitToFeedback(true);
+              }
+            }}
+          >
+            <pre>{submitToFeedback ? (<>Restart<br/><FontAwesomeIcon icon={faSync} size="lg" /> </>) : (`End & Get\nFeedback`)}</pre>
+          </button>
         </div>
       </form>
     </div>
   );
 }
 
-export default InterviewChat;
+export default AIInterview;
