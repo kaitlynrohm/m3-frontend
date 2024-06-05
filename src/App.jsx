@@ -1,4 +1,3 @@
-
 import './App.css'
 import AIInterviewer from "./components/AIInterviewer.jsx"
 import TCnav from "./assets/TCnav.png"
