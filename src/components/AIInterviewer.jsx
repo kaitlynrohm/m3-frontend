@@ -2,8 +2,6 @@ import styles from "./Forms.module.css";
 import React, { useState } from "react";
 import axios from "axios";
 
-
-
 function InterviewChat() {
   const [jobTitle, setJobTitle] = useState("");
   const [conversation, setConversation] = useState([]);
@@ -14,19 +12,13 @@ function InterviewChat() {
 
     const requestData = { title: jobTitle};
 
-    console.log('Submitting job title:', requestData);
-
-    
     await axios
     .post(
       `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/gemini-connection`,
       requestData
     )
     .then((response) => {
-      console.log(
-        'Job title submitted successfully:',
-        response.data
-      );
+      console.log('Job title submitted successfully:', response.data);
       setConversation([
         ...conversation,
         { from: "user", text: "Begin" },
