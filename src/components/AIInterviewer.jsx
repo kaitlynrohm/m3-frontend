@@ -9,7 +9,6 @@ function AIInterview() {
   const [conversation, setConversation] = useState([]);
   const [userResponse, setUserResponse] = useState("");
   const [submitToFeedback, setSubmitToFeedback] = useState(false);
-  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [loading, setLoading] = useState(false); // Add loading state
   const chatRef = useRef(null); // Add reference to chat container
 
@@ -38,11 +37,6 @@ function AIInterview() {
 
   const handleReplySubmit = async (e) => {
     e.preventDefault();
-
-    if (feedbackSubmitted) {
-      window.location.reload();
-      return;
-    }
 
     const newConversation = [
       ...conversation,
@@ -92,19 +86,20 @@ function AIInterview() {
 
   return (
     <div className={styles.contentContainer}>
-      <h2 className={styles.title}>AI Mock Interview</h2>
+      <div className={styles.title}>AI Mock Interview</div>
 
       <form className={styles.jobTitleForm} onSubmit={handleJobTitleSubmit}>
         <div className={styles.inputContainer}>
           <label>Job Title:</label>
           <input
-            placeholder="Submit Job Title to begin..eg, Junior Developer"
+            disabled={conversation.length > 1}
+            placeholder="Submit Job Title to Begin..eg, Junior Developer"
             type="text"
             value={jobTitle}
             onChange={(e) => setJobTitle(e.target.value)}
             required
           />
-          <button type="submit">Submit</button>
+          <button type="submit" disabled={conversation.length > 1}>Submit</button>
         </div>
       </form>
 
@@ -130,7 +125,7 @@ function AIInterview() {
           )}
         </div>
 
-        {conversation.length > 1 && (<div className={styles.inputContainer} id={styles.message}>
+        <div className={styles.inputContainer} id={styles.message}>
           <textarea
             placeholder="Type your response here..."
             type="text"
@@ -138,12 +133,13 @@ function AIInterview() {
             onChange={(e) => setUserResponse(e.target.value)}
             style={{ overflow: "hidden" }}
             required={!submitToFeedback}
-            disabled={submitToFeedback}
+            disabled={submitToFeedback || conversation.length < 1}
           />
-          <button type="submit" className={styles.replyButton} disabled={submitToFeedback}>Reply</button>
+          <button type="submit" className={styles.replyButton} disabled={submitToFeedback || conversation.length < 1} >Reply</button>
           <button
             type="submit"
             className={styles.feedbackButton}
+            disabled={conversation.length < 16}
             onClick={() => {
               if (submitToFeedback) {
                 window.location.reload();
@@ -154,7 +150,7 @@ function AIInterview() {
           >
             <pre>{submitToFeedback ? (<>Restart<br/><FontAwesomeIcon icon={faSync} size="lg" /> </>) : (`End & Get\nFeedback`)}</pre>
           </button>
-        </div>)}
+        </div>
       </form>
     </div>
   );

@@ -10,13 +10,15 @@
     padding: 20px 5vw 0 5vw;
 }
 .title{
-    margin: 20px 0;
+    margin: 15px 0;
     color: rgb(0, 115, 207);
     font-weight: 1000 !important;
     font-size: 26px;
+    height: 4%;
 }
 .jobTitleForm{
   width: 100%;
+  height: fit-content;
 }
 .inputContainer{
     display: flex;
@@ -62,12 +64,12 @@
 
 .messageForm{
   width: 100%;
-  height: 70vh;
+  height: 80%;
 }
 .chat{
     padding: 15px;
     border: 2px solid black;
-    height: 500px;
+    height: 80%;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -91,7 +93,7 @@
   color: rgb(0, 115, 207);
 }
 #message{
-  height: 80px;
+  height: 13%;
 }
 textarea:disabled{
   background-color: lightgrey;
@@ -106,8 +108,14 @@ textarea:disabled{
   background-color: rgb(183, 18, 52) !important;
   width: 100px;
 }
-icon{
-  height: 100px;
+.feedbackButton:disabled{
+  background-color: grey !important;
+}
+.jobTitleForm input:disabled{
+  background-color: lightgrey;
+}
+.jobTitleForm button:disabled{
+  background-color: grey;
 }
 
 @keyframes dot1 {
