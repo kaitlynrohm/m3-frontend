@@ -115,7 +115,7 @@ function AIInterview() {
           ))}
           {loading && (
             <p className={styles.modelMessage}>
-              <strong>AI:</strong> AI is typing
+              <strong>AI:</strong> is typing
               <span className={styles.loadingDots}>
                 <span>.</span>
                 <span className={styles.dot1}>.</span>
