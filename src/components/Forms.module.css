@@ -92,10 +92,15 @@
 }
 #message{
   height: 80px;
-  
+}
+textarea:disabled{
+  background-color: lightgrey;
 }
 .replyButton{
   width: 80px;
+}
+.replyButton:disabled{
+  background-color: grey;
 }
 .feedbackButton{
   background-color: rgb(183, 18, 52) !important;
