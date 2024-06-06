@@ -130,7 +130,7 @@ function AIInterview() {
           )}
         </div>
 
-        <div className={styles.inputContainer} id={styles.message}>
+        {conversation.length > 1 && (<div className={styles.inputContainer} id={styles.message}>
           <textarea
             placeholder="Type your response here..."
             type="text"
@@ -138,8 +138,9 @@ function AIInterview() {
             onChange={(e) => setUserResponse(e.target.value)}
             style={{ overflow: "hidden" }}
             required={!submitToFeedback}
+            disabled={submitToFeedback}
           />
-          <button type="submit" className={styles.replyButton}>Reply</button>
+          <button type="submit" className={styles.replyButton} disabled={submitToFeedback}>Reply</button>
           <button
             type="submit"
             className={styles.feedbackButton}
@@ -153,7 +154,7 @@ function AIInterview() {
           >
             <pre>{submitToFeedback ? (<>Restart<br/><FontAwesomeIcon icon={faSync} size="lg" /> </>) : (`End & Get\nFeedback`)}</pre>
           </button>
-        </div>
+        </div>)}
       </form>
     </div>
   );
