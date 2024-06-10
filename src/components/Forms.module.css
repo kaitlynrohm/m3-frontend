@@ -10,7 +10,7 @@
     padding: 20px 5vw 0 5vw;
 }
 .title{
-    margin: 15px 0;
+    margin: 20px 0 25px;
     color: rgb(0, 115, 207);
     font-weight: 1000 !important;
     font-size: 26px;
@@ -94,6 +94,10 @@
 }
 #message{
   height: 13%;
+}
+textarea:focus{
+  border-color: rgb(0, 115, 207);
+  outline: none;
 }
 textarea:disabled{
   background-color: lightgrey;
