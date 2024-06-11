@@ -16,7 +16,7 @@ function AIInterview() {
   // Handles job title submission
   const handleJobTitleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log("Backend URL:", import.meta.env.VITE_REACT_APP_BACKEND_URL);
     const requestData = { title: jobTitle };
 
     setLoading(true); // Set loading to true before the API call

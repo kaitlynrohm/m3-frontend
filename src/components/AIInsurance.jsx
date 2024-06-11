@@ -33,7 +33,9 @@ function AIInterview() {
       message: userResponse,
     };
 
-    const endpoint = `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/insurance-connection`;
+    const endpoint = `${
+      import.meta.env.VITE_REACT_APP_BACKEND_URL
+    }/api/insurance-connection`;
 
     console.log("Constructed URL:", endpoint);
     console.log("Request Data:", requestData);
@@ -61,17 +63,29 @@ function AIInterview() {
 
   return (
     <div className={styles.contentContainer}>
-      <div className={styles.title}>Tinnie - your AI insurance policy assistant</div>
+      <div className={styles.title}>
+        Tinnie - your AI insurance policy assistant
+      </div>
 
       {/* Message Form */}
       <form className={styles.messageForm} onSubmit={handleReplySubmit}>
-        <div className={styles.chat} ref={chatRef}> {/* Add ref to chat container */}
+        <div className={styles.chat} ref={chatRef}>
+          {" "}
+          {/* Add ref to chat container */}
           {conversation.map((entry, index) => (
             <p
               key={index}
-              className={entry.from === "user" ? styles.userMessage : styles.modelMessage}
+              className={
+                entry.from === "user" ? styles.userMessage : styles.modelMessage
+              }
             >
-              {entry.from === "user" ? entry.text : <><strong>AI:</strong> {entry.text}</>}
+              {entry.from === "user" ? (
+                entry.text
+              ) : (
+                <>
+                  <strong>AI:</strong> {entry.text}
+                </>
+              )}
             </p>
           ))}
           {loading && (
@@ -95,10 +109,7 @@ function AIInterview() {
             style={{ overflow: "hidden" }}
             required={!submitToFeedback}
           />
-          <button
-            type="submit"
-            className={styles.replyButton}
-          >
+          <button type="submit" className={styles.replyButton}>
             Submit
           </button>
         </div>
