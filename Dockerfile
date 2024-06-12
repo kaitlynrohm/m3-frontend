@@ -12,8 +12,7 @@
 # CMD ["npm", "run", "dev"]
 
 
-
-#Stage 1: Build the React app
+# Stage 1: Build the React app
 FROM node:20-alpine3.19 AS builder
 
 WORKDIR /app
@@ -22,6 +21,9 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
+
+ARG VITE_REACT_APP_BACKEND_URL
+ENV VITE_REACT_APP_BACKEND_URL=$VITE_REACT_APP_BACKEND_URL
 
 RUN npm run build
 
