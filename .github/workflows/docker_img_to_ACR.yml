@@ -7,12 +7,7 @@ on:
 
 jobs:
   build:
-    name: "Build and Push to ACR"
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        shell: bash
 
     steps:
       - name: Checkout
@@ -32,3 +27,5 @@ jobs:
           push: true
           tags: mission4.azurecr.io/frontend-image:latest
           file: Dockerfile
+          build-args: |
+            VITE_REACT_APP_BACKEND_URL=${{ secrets.VITE_REACT_APP_BACKEND_URL }}
