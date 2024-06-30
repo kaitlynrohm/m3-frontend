@@ -59,7 +59,7 @@ This frontend application needs to be run in conjunction with the project backen
    ```sh
    npm run dev
    ```
-6. **Clone and setup the frontend**:  
+6. **Clone and setup the backend**:  
    The frontend needs to be run in conjunction with the backend, which is located at [AI Chatbot Backend](https://github.com/nicolegunn/ai-chatbot-backend.git).
 
    ```sh
