@@ -29,6 +29,14 @@ This frontend application needs to be run in conjunction with the project backen
 ![Axios](https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white)
 ![Google Generative AI](https://img.shields.io/badge/Google%20Generative%20AI-4285F4?style=for-the-badge&logo=google&logoColor=white)
 
+## Prerequisites
+
+![Node](https://img.shields.io/badge/Node.js-16.0.0-green)
+![npm](https://img.shields.io/badge/npm-8.0.0-red)
+
+- Node.js (v16 or later)
+- npm (v8 or later) or yarn (v1.22 or later)
+
 ## Installation and Setup
 
 1. **Clone the repository**:
